@@ -146,89 +146,99 @@ class NivoEllipsoid:
 
         return GeodeticPoint(round(b,5), round(l,5), round(h,3), 'geographic')
 
-# def lat2eqdist(ellipsoid, B):
-#     a_  = ellipsoid.SemimajorAxis
-#     b_  = ellipsoid.SemiminorAxis
-#     c   = a_**2 / b_
-#     eu2 = ellipsoid.SecondEccentricity**2
+    def lat2eqdist(self, ellipsoid):
+        a_  = ellipsoid.SemimajorAxis
+        b_  = ellipsoid.SemiminorAxis
+        c   = a_**2 / b_
+        eu2 = ellipsoid.SecondEccentricity**2
 
-#     A_ = c * (1 - 3/4*eu2 + 45/64*eu2**2 - 175/256*eu2**3 + 11025/16384*eu2**4 - 43659/65536*eu2**5) * fi
-#     B_ = c * (-3/8*eu2 + 15/32*eu2**2 - 525/1024*eu2**3 + 2205/4096*eu2**4 - 72765/131072*eu2**5)
-#     C_ = c * (15/256*eu2**2 - 105/1024*eu2**3 + 2205/16384*eu2**4 - 10395/65536*eu2**5)
-#     D_ = c * (-35/3072*eu2**3 + 315/12288*eu2**4 - 31185/786432*eu2**5)
-#     E_ = c * (315/131072*eu2**4 - 3465/524288*eu2**5 )
-#     F_ = c * (-693/1310720*eu2**5)
+        B = self.x
 
-#     G = A_*B + B_*sinf(2*B) + C_*sinf(4*B) + D_*sinf(6*B) + E_*sinf(8*B) + F_*sinf(10*B)
+        A_ = c * (1 - 3/4*eu2 + 45/64*eu2**2 - 175/256*eu2**3 + 11025/16384*eu2**4 - 43659/65536*eu2**5) * fi
+        B_ = c * (-3/8*eu2 + 15/32*eu2**2 - 525/1024*eu2**3 + 2205/4096*eu2**4 - 72765/131072*eu2**5)
+        C_ = c * (15/256*eu2**2 - 105/1024*eu2**3 + 2205/16384*eu2**4 - 10395/65536*eu2**5)
+        D_ = c * (-35/3072*eu2**3 + 315/12288*eu2**4 - 31185/786432*eu2**5)
+        E_ = c * (315/131072*eu2**4 - 3465/524288*eu2**5 )
+        F_ = c * (-693/1310720*eu2**5)
 
-#     return round(G, 5)
+        G = A_*B + B_*sinf(2*B) + C_*sinf(4*B) + D_*sinf(6*B) + E_*sinf(8*B) + F_*sinf(10*B)
 
-# def dist2eqlat(ellipsoid, G):
-#     a_  = ellipsoid.SemimajorAxis
-#     b_  = ellipsoid.SemiminorAxis
-#     c   = a_**2 / b_
-#     eu2 = ellipsoid.SecondEccentricity**2
+        return round(G, 5)
 
-#     A_ = c * (1 - 3/4*eu2 + 45/64*eu2**2 - 175/256*eu2**3 + 11025/16384*eu2**4 - 43659/65536*eu2**5) * fi #... * invro
-#     B__= (3/8*eu2 - 3/16*eu2**2 + 213/2048*eu2**3 - 255/4096*eu2**4 + 20861/524288*eu2**5) / fi
-#     C__= (21/256*eu2**2 - 21/256*eu2**3 + 533/8192*eu2**4 - 197/4096*eu2**5) / fi
-#     D__= (151/6144*eu2**3 - 453/12288*eu2**4 + 5019/131072*eu2**5) / fi
-#     E__= (1097/131072*eu2**4 - 1097/65536*eu2**5) / fi
-#     F__= (8011/2621440*eu2**5) / fi
+    def dist2eqlat(self, ellipsoid, G):
+        a_  = ellipsoid.SemimajorAxis
+        b_  = ellipsoid.SemiminorAxis
+        c   = a_**2 / b_
+        eu2 = ellipsoid.SecondEccentricity**2
 
-#     sigma = G / A_
+        A_ = c * (1 - 3/4*eu2 + 45/64*eu2**2 - 175/256*eu2**3 + 11025/16384*eu2**4 - 43659/65536*eu2**5) * fi #... * invro
+        B__= (3/8*eu2 - 3/16*eu2**2 + 213/2048*eu2**3 - 255/4096*eu2**4 + 20861/524288*eu2**5) / fi
+        C__= (21/256*eu2**2 - 21/256*eu2**3 + 533/8192*eu2**4 - 197/4096*eu2**5) / fi
+        D__= (151/6144*eu2**3 - 453/12288*eu2**4 + 5019/131072*eu2**5) / fi
+        E__= (1097/131072*eu2**4 - 1097/65536*eu2**5) / fi
+        F__= (8011/2621440*eu2**5) / fi
 
-#     B = sigma + B__*sinf(2*sigma) + C__*sinf(4*sigma) + D__*sinf(6*sigma) + E__*sinf(8*sigma) + F__*sinf(10*sigma)
+        sigma = G / A_
 
-#     return round(B, 5)
+        B = sigma + B__*sinf(2*sigma) + C__*sinf(4*sigma) + D__*sinf(6*sigma) + E__*sinf(8*sigma) + F__*sinf(10*sigma)
 
-# def longt2dist(ellipsoid, L1, L2, B):
-#     a_  = ellipsoid.SemimajorAxis
-#     b_  = ellipsoid.SemiminorAxis
-#     c   = a_**2 / b_
-#     e2  = ellipsoid.Eccentricity**2
-#     eu2 = ellipsoid.SecondEccentricity**2
+        return GeodeticPoint(round(B, 5), None, None, 'geographic')
 
-#     n2 = eu2 * cosf(B)**2
-#     V  = sqrt(1 + n2)
-#     W  = sqrt(1 - e2*sinf(B)**2)
+    def longt2dist(self, ellipsoid, deltaL: list):
+        a_  = ellipsoid.SemimajorAxis
+        b_  = ellipsoid.SemiminorAxis
+        c   = a_**2 / b_
+        e2  = ellipsoid.Eccentricity**2
+        eu2 = ellipsoid.SecondEccentricity**2
 
-#     N_ = c / V
-#     N__= a_ / W
-#     N  = (N_ + N__) / 2
+        B = self.x
+        L1, L2 = deltaL
 
-#     l = L2 - L1
+        n2 = eu2 * cosf(B)**2
+        V  = sqrt(1 + n2)
+        W  = sqrt(1 - e2*sinf(B)**2)
 
-#     Sp = N * l * cosf(B) * fi
-    
-#     return round(Sp,3)
+        N_ = c / V
+        N__= a_ / W
+        N  = (N_ + N__) / 2
 
-# def ellipsoidArea(ellipsoid, B1, B2, L1, L2):
-#     b_  = ellipsoid.SemiminorAxis
-#     e2  = ellipsoid.Eccentricity**2
-            
-#     Fa_ = 1 + 1/2*e2 + 3/8*e2**2 + 5/16*e2**3 + 35/128*e2**4
-#     Fb_ = 1/6*e2 + 3/16*e2**2 + 3/16*e2**3 + 35/192*e2**4
-#     Fc_ = 3/80*e2**2 + 1/16*e2**3 + 5/64*e2**4
-#     Fd_ = 1/112*e2**3 + 5/256*e2**4
-#     Fe_ = 5/2304*e2**4
+        l = L2 - L1
 
-#     dB = B2 - B1
-#     dL = L2 - L1
-#     Bm = (B1 + B2) / 2
+        Sp = N * l * cosf(B) * fi
+        
+        return round(Sp,3)
 
-#     # Z = 2*pi*b^2 INTEGRAL(B1 -> B2) cos(B) / (1 - e^2*sin^2*B)^2
-#     # --> dB
-#     Z_ = 4 * pi * b_**2 * (Fa_*sinf(dB/2)*cosf(Bm) - 
-#                            Fb_*sinf(3*dB/2)*cosf(3*Bm) + 
-#                            Fc_*sinf(5*dB/2)*cosf(5*Bm) - 
-#                            Fd_*sinf(7*dB/2)*cosf(7*Bm) + 
-#                            Fe_*sinf(9*dB/2)*cosf(9*Bm)) # m^2
+    def ellipsoidArea(self, ellipsoid, point):
+        b_  = ellipsoid.SemiminorAxis
+        e2  = ellipsoid.Eccentricity**2
+                
+        Fa_ = 1 + 1/2*e2 + 3/8*e2**2 + 5/16*e2**3 + 35/128*e2**4
+        Fb_ = 1/6*e2 + 3/16*e2**2 + 3/16*e2**3 + 35/192*e2**4
+        Fc_ = 3/80*e2**2 + 1/16*e2**3 + 5/64*e2**4
+        Fd_ = 1/112*e2**3 + 5/256*e2**4
+        Fe_ = 5/2304*e2**4
 
-#     Z = Z_ / 1e+6 #km**2
-#     F = dL * Z / (2*pi) * fi
+        B1 = self.x
+        L1 = self.y
+        B2 = point.x
+        L2 = point.y
 
-#     return round(F, 3)
+        dB = B2 - B1
+        dL = L2 - L1
+        Bm = (B1 + B2) / 2
+
+        # Z = 2*pi*b^2 INTEGRAL(B1 -> B2) cos(B) / (1 - e^2*sin^2*B)^2
+        # --> dB
+        Z_ = 4 * pi * b_**2 * (Fa_*sinf(dB/2)*cosf(Bm) - 
+                            Fb_*sinf(3*dB/2)*cosf(3*Bm) + 
+                            Fc_*sinf(5*dB/2)*cosf(5*Bm) - 
+                            Fd_*sinf(7*dB/2)*cosf(7*Bm) + 
+                            Fe_*sinf(9*dB/2)*cosf(9*Bm)) # m^2
+
+        Z = Z_ / 1e+6 #km**2
+        F = dL * Z / (2*pi) * fi
+
+        return round(F, 3)
 
 class ReferenceEllipsoid(NivoEllipsoid):
 
@@ -262,7 +272,7 @@ class ReferenceEllipsoid(NivoEllipsoid):
 
 class GeodeticPoint(ReferenceEllipsoid):
 
-    def __init__(self, x: float, y: float, z: float = None, type: str = 'geographic') -> None:
+    def __init__(self, x: float = 0.0, y: float = 0.0, z: float = None, type: str = 'geographic') -> None:
         self._x = x
         self._y = y
         self._z = z
